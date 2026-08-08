@@ -9,7 +9,7 @@
 import { db, filesTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 import { readObjectBuffer, deleteObject } from "../lib/objectStorage";
-import { dropboxAdapter } from "../storage/dropboxAdapter";
+import { dropboxStorageAdapter } from "../storage/dropboxAdapter";
 import { computeDropboxContentHashFromBuffer } from "../storage/contentHash";
 import { isConnected } from "../storage/dropboxOAuth";
 
@@ -46,7 +46,7 @@ async function transferOne(fileId: string): Promise<void> {
 
     // Upload to Dropbox
     const dropboxPath = file.dropboxPath ?? `/${file.originalFilename}`;
-    await dropboxAdapter.uploadBuffer(dropboxPath, buffer);
+    await dropboxStorageAdapter.uploadBuffer(dropboxPath, buffer);
 
     // Update DB: stored + remove staging object
     await db

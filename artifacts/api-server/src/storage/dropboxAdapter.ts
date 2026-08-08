@@ -193,4 +193,4 @@ export class DropboxAdapter implements StorageAdapter {
   }
 }
 
-export const dropboxAdapter = new DropboxAdapter();
+export const dropboxStorageAdapter = new DropboxAdapter();
