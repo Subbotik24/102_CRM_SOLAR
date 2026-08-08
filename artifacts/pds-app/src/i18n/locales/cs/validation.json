@@ -1,0 +1,7 @@
+{
+  "required": "Povinné pole",
+  "email": "Neplatný formát e-mailu",
+  "minLength": "Minimálně {{count}} znaků",
+  "maxLength": "Maximálně {{count}} znaků",
+  "invalidDate": "Neplatné datum"
+}

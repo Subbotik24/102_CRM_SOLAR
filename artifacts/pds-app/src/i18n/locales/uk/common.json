@@ -1,0 +1,229 @@
+{
+  "nav": {
+    "home": "Головна",
+    "tasks": "Мої завдання",
+    "projects": "Проєкти",
+    "chat": "Чат",
+    "calendar": "Календар",
+    "more": "Більше",
+    "clients": "Замовники",
+    "members": "Учасники",
+    "settings": "Налаштування",
+    "library": "Бібліотека",
+    "kanban": "Канбан",
+    "kanbanSubtitle": "Всі завдання по всіх проєктах",
+    "archive": "Архів"
+  },
+  "actions": {
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "delete": "Видалити",
+    "edit": "Редагувати",
+    "create": "Створити",
+    "confirm": "Підтвердити",
+    "back": "Назад",
+    "close": "Закрити",
+    "search": "Пошук",
+    "filter": "Фільтр",
+    "export": "Експорт",
+    "add": "Додати",
+    "remove": "Видалити",
+    "view": "Переглянути",
+    "send": "Надіслати",
+    "post": "Надіслати",
+    "upload": "Завантажити",
+    "download": "Завантажити",
+    "publish": "Опублікувати",
+    "archive": "Архівувати",
+    "done": "Готово",
+    "copy": "Копіювати",
+    "reactivate": "Відновити",
+    "suspend": "Призупинити",
+    "invite": "Запросити",
+    "retry": "Спробувати ще раз",
+    "reload": "Перезавантажити"
+  },
+  "status": {
+    "loading": "Завантаження...",
+    "error": "Помилка",
+    "noData": "Немає даних",
+    "empty": "Порожньо",
+    "unexpectedError": "Сталася неочікувана помилка. Спробуйте ще раз."
+  },
+  "roles": {
+    "admin": "Адміністратор",
+    "manager": "Менеджер",
+    "member": "Учасник",
+    "guest": "Гість"
+  },
+  "exit": "Вийти",
+  "user": "Користувач",
+  "search": {
+    "placeholder": "Пошук…",
+    "shortcutHint": "⌘K",
+    "minChars": "Введіть мінімум 2 символи для пошуку…",
+    "noResults": "Нічого не знайдено для",
+    "categories": {
+      "projects": "Проєкти",
+      "tasks": "Завдання",
+      "kb": "БЗ",
+      "comments": "Коментарі",
+      "files": "Файли"
+    }
+  },
+  "notifications": {
+    "title": "Сповіщення",
+    "markAllRead": "Відмітити всі як прочитані",
+    "noNotifications": "Немає сповіщень",
+    "mention": "Згадав(-ла) вас",
+    "taskAssigned": "Завдання призначено",
+    "newMessage": "Нове повідомлення",
+    "newComment": "Новий коментар",
+    "taskDueToday": "Термін завдання — сьогодні",
+    "taskOverdue": "Завдання прострочено",
+    "deletionRequested": "Запит на видалення"
+  },
+  "comments": {
+    "title": "Коментарі",
+    "placeholder": "Додати коментар… (підтримує @згадки)",
+    "post": "Надіслати",
+    "noComments": "Коментарів ще немає. Залиште перший.",
+    "edited": "(редаговано)",
+    "visibility": {
+      "external": "Зовнішній",
+      "internal": "Внутрішній"
+    }
+  },
+  "members": {
+    "pageTitle": "Учасники",
+    "pageSubtitle": "Всі учасники проєктів.",
+    "noMembers": "Учасників не знайдено.",
+    "project": "Проєкт",
+    "role": "Роль",
+    "changeAvatar": "Колір аватара:"
+  },
+  "library": {
+    "title": "Бібліотека",
+    "subtitle": "Робочі документи, шаблони та стандарти команди",
+    "categories": "Категорії",
+    "addItem": "Додати документ",
+    "editItem": "Редагувати документ",
+    "open": "Відкрити",
+    "empty": "У цій категорії ще немає документів",
+    "addFirst": "Додати перший",
+    "fields": {
+      "title": "Назва",
+      "titlePlaceholder": "Напр. Шаблон договору",
+      "category": "Категорія",
+      "description": "Опис",
+      "descriptionPlaceholder": "Короткий опис документу…",
+      "url": "Посилання (необов'язково)"
+    },
+    "cat": {
+      "all": "Усі",
+      "template": "Шаблони",
+      "standard": "Стандарти",
+      "instruction": "Інструкції",
+      "material": "Матеріали",
+      "report": "Звіти",
+      "other": "Інше"
+    }
+  },
+  "clients": {
+    "pageTitle": "Замовники",
+    "pageSubtitle": "Компанії-замовники та контакти.",
+    "newClient": "Новий замовник",
+    "noClients": "Замовників ще немає.",
+    "addFirst": "Додати першого замовника",
+    "editClient": "Редагувати замовника",
+    "noClient": "— без замовника —",
+    "fields": {
+      "name": "Назва",
+      "namePlaceholder": "Напр. Acme Corp",
+      "industry": "Галузь",
+      "industryPlaceholder": "Напр. Будівництво",
+      "website": "Сайт",
+      "websitePlaceholder": "https://example.com",
+      "avatar": "Колір аватара"
+    },
+    "contacts": {
+      "title": "Контакти",
+      "noContacts": "Контактів ще немає.",
+      "addContact": "Додати контакт",
+      "fields": {
+        "firstName": "Ім'я",
+        "firstNamePlaceholder": "Іван",
+        "lastName": "Прізвище",
+        "lastNamePlaceholder": "Іваненко",
+        "position": "Посада / роль",
+        "positionPlaceholder": "CTO",
+        "email": "Електронна пошта",
+        "emailPlaceholder": "ivan@example.com",
+        "phone": "Телефон",
+        "phonePlaceholder": "+380 55 000 0000"
+      }
+    },
+    "notFound": "Замовника не знайдено.",
+    "noClient": "— без замовника —"
+  },
+  "notFound": {
+    "title": "404 // NOT_FOUND",
+    "message": "Запитаний ресурс не знайдено або у вас немає достатніх прав доступу."
+  },
+  "home": {
+    "goodMorning": "Доброго ранку",
+    "goodDay": "Доброго дня",
+    "goodEvening": "Доброго вечора",
+    "activeProjects": "Активні проєкти",
+    "openTasks": "Відкриті завдання",
+    "overdue": "Прострочено",
+    "blocked": "Заблоковано",
+    "myTasks": "Мої завдання",
+    "noTasks": "Немає відкритих завдань — чудово!",
+    "more": "ще",
+    "deliveryHealth": "Стан виконання",
+    "teamScope": "Огляд команди",
+    "personalScope": "Особистий огляд",
+    "taskDistribution": "Розподіл завдань",
+    "taskDistributionDescription": "Поточний стан роботи за статусами",
+    "projectPortfolio": "Портфель проєктів",
+    "projectPortfolioDescription": "Розподіл доступних проєктів за станом",
+    "upcomingDeadlines": "Найближчі дедлайни",
+    "next14Days": "Наступні 14 днів",
+    "noUpcomingDeadlines": "На найближчі 14 днів дедлайнів немає",
+    "needsAttention": "Потребує уваги",
+    "needsAttentionDescription": "Прострочені та заблоковані завдання",
+    "allHealthy": "Критичних проблем немає",
+    "allHealthyDescription": "Наразі немає прострочених або заблокованих завдань",
+    "restrictedTitle": "Огляд недоступний для гостьової ролі",
+    "restrictedDescription": "Гостьовий доступ не відкриває внутрішні проєкти та завдання",
+    "loadFailed": "Не вдалося завантажити дані для огляду"
+  },
+  "settings": {
+    "members": "Учасники",
+    "system": "Система"
+  },
+  "calendar": {
+    "subtitle": "Завдання по датах виконання",
+    "today": "Сьогодні",
+    "more": "ще"
+  },
+  "kanban": {
+    "dropHere": "Перетягніть сюди",
+    "taskCount": "завд."
+  },
+  "more": {
+    "title": "Більше",
+    "subtitle": "Налаштування, уподобання та управління обліковим записом.",
+    "profileSettings": "Налаштування профілю",
+    "profileSubtitle": "Оновіть особисту інформацію",
+    "preferences": "Уподобання",
+    "preferencesSubtitle": "Сповіщення та тема",
+    "language": "Мова",
+    "languageSubtitle": "Змінити мову інтерфейсу",
+    "settingsSubtitle": "Учасники та системні налаштування",
+    "archiveSubtitle": "Архівовані проєкти",
+    "loggingOut": "Вихід...",
+    "logOut": "Вийти"
+  }
+}

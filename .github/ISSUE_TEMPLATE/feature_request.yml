@@ -1,0 +1,14 @@
+name: Feature request
+description: Propose a practical improvement
+body:
+  - type: textarea
+    attributes:
+      label: Problem and user value
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposed approach
+  - type: textarea
+    attributes:
+      label: Alternatives considered

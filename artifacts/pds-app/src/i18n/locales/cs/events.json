@@ -1,0 +1,21 @@
+{
+  "project.created": "{{actorName}} vytvořil(-a) projekt «{{projectName}}»",
+  "project.status_changed": "{{actorName}} změnil(-a) stav projektu na {{to}}",
+  "project.member_added": "{{actorName}} přidal(-a) {{memberName}} do projektu",
+  "project.member_removed": "{{actorName}} odebral(-a) {{memberName}} z projektu",
+  "project.archived": "{{actorName}} archivoval(-a) projekt",
+  "subproject.created": "{{actorName}} vytvořil(-a) podprojekt «{{projectName}}»",
+  "stage.created": "{{actorName}} vytvořil(-a) etapu «{{stageName}}»",
+  "stage.completed": "{{actorName}} dokončil(-a) etapu «{{stageName}}»",
+  "task.created": "{{actorName}} vytvořil(-a) úkol «{{taskTitle}}»",
+  "task.assigned": "{{actorName}} přiřadil(-a) úkol «{{taskTitle}}» uživateli {{assigneeName}}",
+  "task.status_changed": "{{actorName}} změnil(-a) stav úkolu «{{taskTitle}}» z {{from}} na {{to}}",
+  "task.due_changed": "{{actorName}} změnil(-a) termín úkolu «{{taskTitle}}»",
+  "task.completed": "{{actorName}} dokončil(-a) úkol «{{taskTitle}}»",
+  "comment.added": "{{actorName}} přidal(-a) komentář",
+  "file.uploaded": "{{actorName}} nahrál(-a) soubor «{{fileName}}»",
+  "file.version_added": "{{actorName}} nahrál(-a) novou verzi souboru «{{fileName}}»",
+  "kb.article_linked": "{{actorName}} připojil(-a) článek ZB",
+  "log.decision_added": "{{actorName}} přidal(-a) rozhodnutí: {{title}}",
+  "log.milestone_added": "{{actorName}} přidal(-a) milestone: {{title}}"
+}

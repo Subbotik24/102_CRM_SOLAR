@@ -1,0 +1,3293 @@
+openapi: 3.1.0
+info:
+  title: CRM Solar API
+  version: 0.2.0
+  description: CRM Solar project delivery API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication operations
+  - name: projects
+    description: Project operations
+  - name: stages
+    description: Stage operations
+  - name: tasks
+    description: Task operations
+  - name: checklist
+    description: Checklist operations
+  - name: journal
+    description: Activity journal operations
+  - name: clients
+    description: Client and contact operations
+  - name: comments
+    description: Comment operations
+  - name: conversations
+    description: Conversation and messaging operations
+  - name: notifications
+    description: Notification operations
+  - name: files
+    description: File upload and management operations
+  - name: admin
+    description: Admin operations (Dropbox, settings)
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Log in with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginCredentials"
+      responses:
+        "200":
+          description: Logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentUser"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Too many attempts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Log out and destroy session
+      responses:
+        "204":
+          description: Logged out
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentUser"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List all projects (ordered by path)
+      responses:
+        "200":
+          description: Project list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectList"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectInput"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a project by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProjectInput"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Delete a project
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "204": { description: Project deleted }
+        "404": { description: Project not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /projects/{id}/archive:
+    post:
+      operationId: archiveProject
+      tags: [projects]
+      summary: Archive a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Archived project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /projects/{id}/move:
+    post:
+      operationId: moveProject
+      tags: [projects]
+      summary: Move a project to a new parent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MoveProjectInput"
+      responses:
+        "200":
+          description: Moved project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: Cycle or depth violation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /projects/{id}/subtree:
+    get:
+      operationId: listProjectSubtree
+      tags: [projects]
+      summary: List all descendants of a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Subtree list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectList"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /projects/{id}/members:
+    get:
+      operationId: listProjectMembers
+      tags: [projects]
+      summary: List project members
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Member list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectMemberList"
+    post:
+      operationId: addProjectMember
+      tags: [projects]
+      summary: Add a member to a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddMemberInput"
+      responses:
+        "201":
+          description: Added member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectMember"
+
+  /projects/{id}/members/{userId}:
+    delete:
+      operationId: removeProjectMember
+      tags: [projects]
+      summary: Remove a member from a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Member removed
+
+  /projects/{id}/stages:
+    get:
+      operationId: listProjectStages
+      tags: [stages]
+      summary: List stages for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Stage list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StageList"
+    post:
+      operationId: createProjectStage
+      tags: [stages]
+      summary: Create a stage for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateStageInput"
+      responses:
+        "201":
+          description: Created stage
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stage"
+
+  /projects/{id}/stages/reorder:
+    post:
+      operationId: reorderProjectStages
+      tags: [stages]
+      summary: Reorder stages for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReorderStagesInput"
+      responses:
+        "200":
+          description: Reordered stages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StageList"
+
+  /stages/{id}:
+    patch:
+      operationId: updateStage
+      tags: [stages]
+      summary: Update a stage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStageInput"
+      responses:
+        "200":
+          description: Updated stage
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stage"
+    delete:
+      operationId: deleteStage
+      tags: [stages]
+      summary: Delete a stage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Stage deleted
+
+  /stages/{id}/complete:
+    post:
+      operationId: completeStage
+      tags: [stages]
+      summary: Toggle stage completion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Updated stage
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stage"
+
+  /projects/{id}/tasks:
+    get:
+      operationId: listProjectTasks
+      tags: [tasks]
+      summary: List tasks in a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [todo, in_progress, blocked, review, done]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+        - name: assigneeId
+          in: query
+          schema:
+            type: string
+        - name: stageId
+          in: query
+          schema:
+            type: string
+        - name: parentTaskId
+          in: query
+          schema:
+            type: string
+        - name: rootOnly
+          in: query
+          schema:
+            type: boolean
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Task list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskList"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: createProjectTask
+      tags: [tasks]
+      summary: Create a task in a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskInput"
+      responses:
+        "201":
+          description: Created task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /tasks/{id}:
+    get:
+      operationId: getTask
+      tags: [tasks]
+      summary: Get a task by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateTask
+      tags: [tasks]
+      summary: Update a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTaskInput"
+      responses:
+        "200":
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteTask
+      tags: [tasks]
+      summary: Delete a task and its subtasks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Task deleted
+
+  /tasks/{id}/status:
+    patch:
+      operationId: updateTaskStatus
+      tags: [tasks]
+      summary: Update task status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTaskStatusInput"
+      responses:
+        "200":
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /tasks/{id}/archive:
+    post:
+      operationId: archiveTask
+      tags: [tasks]
+      summary: Archive a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Archived task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+  /tasks/{id}/checklist:
+    get:
+      operationId: listChecklistItems
+      tags: [checklist]
+      summary: List checklist items for a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Checklist items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChecklistList"
+    post:
+      operationId: createChecklistItem
+      tags: [checklist]
+      summary: Add a checklist item to a task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateChecklistItemInput"
+      responses:
+        "201":
+          description: Created item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChecklistItem"
+
+  /checklist/{id}:
+    patch:
+      operationId: updateChecklistItem
+      tags: [checklist]
+      summary: Update a checklist item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateChecklistItemInput"
+      responses:
+        "200":
+          description: Updated item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChecklistItem"
+    delete:
+      operationId: deleteChecklistItem
+      tags: [checklist]
+      summary: Delete a checklist item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /checklist/{id}/toggle:
+    post:
+      operationId: toggleChecklistItem
+      tags: [checklist]
+      summary: Toggle checklist item completion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Toggled item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChecklistItem"
+
+  /projects/{id}/journal:
+    get:
+      operationId: listProjectJournal
+      tags: [journal]
+      summary: List activity events for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Journal page
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JournalPage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /clients:
+    get:
+      operationId: listClients
+      tags: [clients]
+      summary: List all clients
+      responses:
+        "200":
+          description: Client list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientList"
+    post:
+      operationId: createClient
+      tags: [clients]
+      summary: Create a client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClientInput"
+      responses:
+        "201":
+          description: Created client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+
+  /clients/{id}:
+    get:
+      operationId: getClient
+      tags: [clients]
+      summary: Get a client by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateClient
+      tags: [clients]
+      summary: Update a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientInput"
+      responses:
+        "200":
+          description: Updated client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+
+  /clients/{id}/archive:
+    post:
+      operationId: archiveClient
+      tags: [clients]
+      summary: Archive a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Archived
+
+  /clients/{id}/contacts:
+    get:
+      operationId: listContacts
+      tags: [clients]
+      summary: List contacts for a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Contact list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactList"
+    post:
+      operationId: createContact
+      tags: [clients]
+      summary: Create a contact for a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContactInput"
+      responses:
+        "201":
+          description: Created contact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+
+  /contacts/{id}:
+    patch:
+      operationId: updateContact
+      tags: [clients]
+      summary: Update a contact
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContactInput"
+      responses:
+        "200":
+          description: Updated contact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+    delete:
+      operationId: deleteContact
+      tags: [clients]
+      summary: Archive a contact
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Archived
+
+  /comments:
+    get:
+      operationId: listComments
+      tags: [comments]
+      summary: List comments for an entity
+      parameters:
+        - name: entityType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [project, task, kb_article]
+        - name: entityId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Comment list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentList"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: addComment
+      tags: [comments]
+      summary: Add a comment to an entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddCommentInput"
+      responses:
+        "201":
+          description: Created comment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /comments/{id}:
+    patch:
+      operationId: editComment
+      tags: [comments]
+      summary: Edit a comment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditCommentInput"
+      responses:
+        "200":
+          description: Updated comment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteComment
+      tags: [comments]
+      summary: Soft-delete a comment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /conversations:
+    get:
+      operationId: listConversations
+      tags: [conversations]
+      summary: List conversations the actor is a member of
+      responses:
+        "200":
+          description: Conversation list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationList"
+
+  /conversations/direct:
+    post:
+      operationId: createDirectConversation
+      tags: [conversations]
+      summary: Create or return a direct conversation with another user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDirectConversationInput"
+      responses:
+        "201":
+          description: Conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+
+  /conversations/project:
+    post:
+      operationId: createProjectConversation
+      tags: [conversations]
+      summary: Create a project conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectConversationInput"
+      responses:
+        "201":
+          description: Conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+
+  /conversations/{id}:
+    get:
+      operationId: getConversation
+      tags: [conversations]
+      summary: Get a conversation by ID (member only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+        "403":
+          description: Not a member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /conversations/{id}/members:
+    get:
+      operationId: listConversationMembers
+      tags: [conversations]
+      summary: List members of a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Member list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationMemberList"
+    post:
+      operationId: addConversationMember
+      tags: [conversations]
+      summary: Add a member to a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId:
+                  type: string
+      responses:
+        "204":
+          description: Added
+
+  /conversations/{id}/messages:
+    get:
+      operationId: listMessages
+      tags: [conversations]
+      summary: List messages in a conversation (cursor paginated)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: cursor
+          in: query
+          schema:
+            type: string
+        - name: after
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Message list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageList"
+        "403":
+          description: Not a member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: sendMessage
+      tags: [conversations]
+      summary: Send a message
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageInput"
+      responses:
+        "201":
+          description: Created message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  /conversations/{id}/mark-read:
+    post:
+      operationId: markRead
+      tags: [conversations]
+      summary: Mark a conversation as read up to a message
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [messageId]
+              properties:
+                messageId:
+                  type: string
+      responses:
+        "204":
+          description: Marked
+
+  /conversations/{id}/unread-count:
+    get:
+      operationId: getUnreadCount
+      tags: [conversations]
+      summary: Get unread message count for a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Unread count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+
+  /messages/{id}:
+    patch:
+      operationId: editMessage
+      tags: [conversations]
+      summary: Edit a message
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditMessageInput"
+      responses:
+        "200":
+          description: Updated message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+    delete:
+      operationId: deleteMessage
+      tags: [conversations]
+      summary: Soft-delete a message
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: List notifications for the current user
+      responses:
+        "200":
+          description: Notification list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationList"
+
+  /notifications/{id}/read:
+    post:
+      operationId: markNotificationRead
+      tags: [notifications]
+      summary: Mark a notification as read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Marked read
+
+  /notifications/mark-all-read:
+    post:
+      operationId: markAllNotificationsRead
+      tags: [notifications]
+      summary: Mark all notifications as read
+      responses:
+        "204":
+          description: Marked
+
+  /users/mention-search:
+    get:
+      operationId: mentionSearch
+      tags: [auth]
+      summary: Search users for @mention autocomplete
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MentionSearchResult"
+
+  /files:
+    get:
+      operationId: listFiles
+      tags: [files]
+      summary: List files for an entity
+      parameters:
+        - name: entityType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [project, task, kb_article]
+        - name: entityId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileList"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: uploadFile
+      tags: [files]
+      summary: Upload a file (multipart/form-data)
+      parameters:
+        - name: entityType
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: entityId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: visibility
+          in: query
+          schema:
+            type: string
+            enum: [internal, external]
+        - name: documentGroupId
+          in: query
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: Binary file data
+      responses:
+        "201":
+          description: Uploaded file record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileRecord"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "413":
+          description: File too large
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "415":
+          description: MIME type not allowed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /files/{id}/download:
+    get:
+      operationId: downloadFile
+      tags: [files]
+      summary: Proxy download a file (App Storage or Dropbox)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File bytes
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "410":
+          description: File missing from storage
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /files/{id}/versions:
+    get:
+      operationId: listFileVersions
+      tags: [files]
+      summary: List all versions of a document group
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Version list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  versions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FileRecord"
+
+  /admin/dropbox/status:
+    get:
+      operationId: getDropboxStatus
+      tags: [admin]
+      summary: Get Dropbox connection status
+      responses:
+        "200":
+          description: Dropbox status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DropboxStatus"
+
+  /admin/dropbox/connect:
+    get:
+      operationId: connectDropbox
+      tags: [admin]
+      summary: Redirect to Dropbox OAuth consent page
+      responses:
+        "302":
+          description: Redirect to Dropbox
+
+  /admin/dropbox/callback:
+    get:
+      operationId: dropboxCallback
+      tags: [admin]
+      summary: Dropbox OAuth callback
+      parameters:
+        - name: code
+          in: query
+          schema:
+            type: string
+        - name: state
+          in: query
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirect to admin page
+
+  /admin/dropbox/disconnect:
+    delete:
+      operationId: disconnectDropbox
+      tags: [admin]
+      summary: Revoke Dropbox connection
+      responses:
+        "204":
+          description: Disconnected
+
+  /profile:
+    patch:
+      operationId: updateProfile
+      tags: [auth]
+      summary: Update the current user's profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileInput"
+      responses:
+        "200": { description: Updated user, content: { application/json: { schema: { $ref: "#/components/schemas/CurrentUser" } } } }
+        "400": { description: Invalid input, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /auth/forgot-password:
+    post:
+      operationId: requestPasswordReset
+      tags: [auth]
+      summary: Request a password-reset link without revealing account existence
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ForgotPasswordInput" }
+      responses:
+        "200": { description: Uniform acknowledgement, content: { application/json: { schema: { $ref: "#/components/schemas/PasswordResetAcknowledgement" } } } }
+        "400": { description: Invalid input, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /auth/reset-password:
+    post:
+      operationId: resetPassword
+      tags: [auth]
+      summary: Reset a password using a one-time token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ResetPasswordInput" }
+      responses:
+        "200": { description: Password reset, content: { application/json: { schema: { $ref: "#/components/schemas/PasswordResetAcknowledgement" } } } }
+        "400": { description: Invalid or expired token, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /admin/invitations:
+    post:
+      operationId: createInvitation
+      tags: [admin]
+      summary: Invite a user with a localized delivery method
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateInvitationInput" }
+      responses:
+        "201": { description: Invitation created, content: { application/json: { schema: { $ref: "#/components/schemas/InvitationDelivery" } } } }
+        "409": { description: Active invitation or account already exists, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+        "503": { description: Delivery unavailable, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /admin/users/{id}/reset-link:
+    post:
+      operationId: createAdminPasswordResetLink
+      tags: [admin]
+      summary: Create and deliver a password-reset link for a user
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "201": { description: Reset link delivered, content: { application/json: { schema: { $ref: "#/components/schemas/InvitationDelivery" } } } }
+        "404": { description: User not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+        "503": { description: Delivery unavailable, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /admin/users:
+    get:
+      operationId: listAdminUsers
+      tags: [admin]
+      summary: List users, optionally filtered by a text query
+      parameters: [{ name: q, in: query, schema: { type: string } }]
+      responses:
+        "200": { description: Users, content: { application/json: { schema: { $ref: "#/components/schemas/AdminUserList" } } } }
+
+  /admin/users/{id}:
+    get:
+      operationId: getAdminUser
+      tags: [admin]
+      summary: Get a user
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: User, content: { application/json: { schema: { $ref: "#/components/schemas/AdminUser" } } } }
+        "404": { description: User not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+    patch:
+      operationId: updateAdminUser
+      tags: [admin]
+      summary: Update a user's role, status or profile fields
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/UpdateAdminUserInput" } } }
+      responses:
+        "200": { description: Updated user, content: { application/json: { schema: { $ref: "#/components/schemas/AdminUser" } } } }
+        "400": { description: Invalid input, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+        "404": { description: User not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+    delete:
+      operationId: deleteAdminUser
+      tags: [admin]
+      summary: Delete a user other than the current administrator
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "204": { description: User deleted }
+        "400": { description: Cannot delete current user, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+        "409": { description: User cannot be deleted safely, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /admin/audit-log:
+    get:
+      operationId: listAuditLog
+      tags: [admin]
+      summary: List audit events
+      parameters:
+        - { name: actorId, in: query, schema: { type: string } }
+        - { name: action, in: query, schema: { type: string } }
+        - { name: dateFrom, in: query, schema: { type: string } }
+        - { name: dateTo, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 200 } }
+        - { name: offset, in: query, schema: { type: integer, minimum: 0 } }
+      responses:
+        "200": { description: Paginated audit events, content: { application/json: { schema: { $ref: "#/components/schemas/AuditLogPage" } } } }
+
+  /admin/audit-log.csv:
+    get:
+      operationId: exportAuditLogCsv
+      tags: [admin]
+      summary: Export up to 10,000 audit events as CSV
+      responses:
+        "200": { description: CSV export, content: { text/csv: { schema: { type: string } } } }
+
+  /admin/settings:
+    get:
+      operationId: listAdminSettings
+      tags: [admin]
+      summary: List non-encrypted settings
+      responses:
+        "200": { description: Settings, content: { application/json: { schema: { $ref: "#/components/schemas/SettingList" } } } }
+    patch:
+      operationId: updateAdminSetting
+      tags: [admin]
+      summary: Create or update a non-encrypted setting
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/UpdateSettingInput" } } }
+      responses:
+        "200": { description: Updated setting, content: { application/json: { schema: { $ref: "#/components/schemas/Setting" } } } }
+        "400": { description: Invalid or encrypted key, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /readyz:
+    get:
+      operationId: readinessCheck
+      tags: [health]
+      summary: Check PostgreSQL readiness
+      responses:
+        "200": { description: Ready, content: { application/json: { schema: { $ref: "#/components/schemas/ReadinessStatus" } } } }
+        "503": { description: Database unavailable, content: { application/json: { schema: { $ref: "#/components/schemas/ReadinessStatus" } } } }
+
+  /users:
+    get:
+      operationId: listUsersForPicker
+      tags: [projects]
+      summary: List non-guest users for assignment pickers
+      parameters: [{ name: q, in: query, schema: { type: string } }]
+      responses:
+        "200": { description: Users, content: { application/json: { schema: { $ref: "#/components/schemas/UserPickerList" } } } }
+        "403": { description: Guest accounts cannot enumerate users, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /tasks:
+    get:
+      operationId: listAllTasks
+      tags: [tasks]
+      summary: List accessible tasks with optional filters
+      parameters:
+        - { name: assigneeId, in: query, schema: { type: string } }
+        - { name: status, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 500 } }
+      responses:
+        "200": { description: Tasks, content: { application/json: { schema: { $ref: "#/components/schemas/TaskList" } } } }
+
+  /projects/{id}/restore:
+    post:
+      operationId: restoreProject
+      tags: [projects]
+      summary: Restore an archived project
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200": { description: Restored project, content: { application/json: { schema: { $ref: "#/components/schemas/Project" } } } }
+        "404": { description: Missing or active project, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /projects/members/all:
+    get:
+      operationId: listAllProjectMembers
+      tags: [projects]
+      summary: List members across accessible projects
+      responses:
+        "200": { description: Project members, content: { application/json: { schema: { $ref: "#/components/schemas/ProjectMemberDirectory" } } } }
+
+  /projects/{id}/kb:
+    get:
+      operationId: listKbArticles
+      tags: [kb]
+      summary: List non-archived articles in an accessible project
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "200": { description: Articles, content: { application/json: { schema: { $ref: "#/components/schemas/KbArticleList" } } } } }
+    post:
+      operationId: createKbArticle
+      tags: [kb]
+      summary: Create a KB article
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/CreateKbArticleInput" } } } }
+      responses: { "201": { description: Created article, content: { application/json: { schema: { $ref: "#/components/schemas/KbArticle" } } } } }
+
+  /kb/{id}:
+    get:
+      operationId: getKbArticle
+      tags: [kb]
+      summary: Get a KB article
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "200": { description: Article, content: { application/json: { schema: { $ref: "#/components/schemas/KbArticle" } } } }, "404": { description: Not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } } }
+    patch:
+      operationId: updateKbArticle
+      tags: [kb]
+      summary: Update a KB article
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/UpdateKbArticleInput" } } } }
+      responses: { "200": { description: Updated article, content: { application/json: { schema: { $ref: "#/components/schemas/KbArticle" } } } } }
+
+  /kb/{id}/publish:
+    post:
+      operationId: publishKbArticle
+      tags: [kb]
+      summary: Publish a KB article
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "200": { description: Published article, content: { application/json: { schema: { $ref: "#/components/schemas/KbArticle" } } } } }
+
+  /kb/{id}/archive:
+    post:
+      operationId: archiveKbArticle
+      tags: [kb]
+      summary: Archive a KB article
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "200": { description: Archived article, content: { application/json: { schema: { $ref: "#/components/schemas/KbArticle" } } } } }
+
+  /kb/{id}/versions:
+    get:
+      operationId: listKbArticleVersions
+      tags: [kb]
+      summary: List article versions
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "200": { description: Versions, content: { application/json: { schema: { $ref: "#/components/schemas/KbVersionList" } } } } }
+
+  /projects/{id}/kb/search:
+    get:
+      operationId: searchKbByTag
+      tags: [kb]
+      summary: Search accessible KB articles by exact tag
+      parameters: [{ $ref: "#/components/parameters/Id" }, { name: tag, in: query, required: true, schema: { type: string, minLength: 1 } }]
+      responses: { "200": { description: Articles, content: { application/json: { schema: { $ref: "#/components/schemas/KbArticleList" } } } }, "400": { description: Missing tag, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } } }
+
+  /library:
+    get:
+      operationId: listLibraryItems
+      tags: [projects]
+      summary: List library items
+      parameters: [{ name: category, in: query, schema: { $ref: "#/components/schemas/LibraryCategory" } }]
+      responses: { "200": { description: Items, content: { application/json: { schema: { $ref: "#/components/schemas/LibraryItemList" } } } } }
+    post:
+      operationId: createLibraryItem
+      tags: [projects]
+      summary: Create a library item
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/CreateLibraryItemInput" } } } }
+      responses: { "201": { description: Created item, content: { application/json: { schema: { $ref: "#/components/schemas/LibraryItem" } } } } }
+
+  /library/{id}:
+    patch:
+      operationId: updateLibraryItem
+      tags: [projects]
+      summary: Update a library item
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/UpdateLibraryItemInput" } } } }
+      responses: { "200": { description: Updated item, content: { application/json: { schema: { $ref: "#/components/schemas/LibraryItem" } } } }, "404": { description: Not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } } }
+    delete:
+      operationId: deleteLibraryItem
+      tags: [projects]
+      summary: Archive a library item
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Archived item } }
+
+  /projects/{id}/info-blocks:
+    get:
+      operationId: listProjectInfoBlocks
+      tags: [projects]
+      summary: List project information blocks
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "200": { description: Blocks, content: { application/json: { schema: { $ref: "#/components/schemas/InfoBlockList" } } } } }
+    post:
+      operationId: createProjectInfoBlock
+      tags: [projects]
+      summary: Create a project information block
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/InfoBlockInput" } } } }
+      responses: { "201": { description: Created block, content: { application/json: { schema: { $ref: "#/components/schemas/InfoBlock" } } } } }
+
+  /info-blocks/{id}:
+    patch:
+      operationId: updateProjectInfoBlock
+      tags: [projects]
+      summary: Update a project information block
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/InfoBlockInput" } } } }
+      responses: { "200": { description: Updated block, content: { application/json: { schema: { $ref: "#/components/schemas/InfoBlock" } } } }, "404": { description: Not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } } }
+    delete:
+      operationId: deleteProjectInfoBlock
+      tags: [projects]
+      summary: Delete a project information block
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Deleted block } }
+
+  /projects/{id}/log-entries:
+    get:
+      operationId: listProjectLogEntries
+      tags: [journal]
+      summary: List a project's manual journal entries
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "200": { description: Entries, content: { application/json: { schema: { $ref: "#/components/schemas/LogEntryList" } } } } }
+    post:
+      operationId: createProjectLogEntry
+      tags: [journal]
+      summary: Create a manual journal entry
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/LogEntryInput" } } } }
+      responses: { "201": { description: Created entry, content: { application/json: { schema: { $ref: "#/components/schemas/LogEntry" } } } } }
+
+  /log-entries/{id}:
+    patch:
+      operationId: updateProjectLogEntry
+      tags: [journal]
+      summary: Update a manual journal entry
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/LogEntryInput" } } } }
+      responses: { "200": { description: Updated entry, content: { application/json: { schema: { $ref: "#/components/schemas/LogEntry" } } } } }
+    delete:
+      operationId: deleteProjectLogEntry
+      tags: [journal]
+      summary: Soft-delete a manual journal entry
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Deleted entry } }
+
+  /files/{id}:
+    delete:
+      operationId: deleteFile
+      tags: [files]
+      summary: Delete a file as an administrator or request deletion otherwise
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "204": { description: File deleted }
+        "202": { description: Deletion request created, content: { application/json: { schema: { $ref: "#/components/schemas/DeletionRequestAcknowledgement" } } } }
+        "404": { description: File not found, content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /projects/{id}/chronicle:
+    get:
+      operationId: exportProjectChronicle
+      tags: [journal]
+      summary: Export a project chronicle as Markdown or PDF
+      parameters: [{ $ref: "#/components/parameters/Id" }, { name: format, in: query, schema: { type: string, enum: [md, pdf], default: md } }]
+      responses:
+        "200":
+          description: Downloadable chronicle
+          content:
+            text/markdown: { schema: { type: string, format: binary } }
+            application/pdf: { schema: { type: string, format: binary } }
+
+  /auth/invite/accept:
+    post:
+      operationId: acceptInvitation
+      tags: [auth]
+      summary: Accept a one-time invitation and create a session
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/AcceptInvitationInput" } } } }
+      responses:
+        "201": { description: Account created, content: { application/json: { schema: { $ref: "#/components/schemas/AcceptedInvitationUser" } } } }
+        "400": { description: "Invalid, expired or consumed invitation", content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } } }
+
+  /deletion-requests/{id}/approve:
+    post:
+      operationId: approveDeletionRequest
+      tags: [tasks]
+      summary: Approve a pending task or file deletion request
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Request approved and entity deleted } }
+
+  /deletion-requests/{id}/reject:
+    post:
+      operationId: rejectDeletionRequest
+      tags: [tasks]
+      summary: Reject a pending task or file deletion request
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Request rejected } }
+
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: { type: string }
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+        timestamp:
+          type: string
+      required:
+        - status
+        - timestamp
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    UpdateProfileInput:
+      type: object
+      properties:
+        displayName: { type: string, minLength: 1, maxLength: 100 }
+        position: { type: [string, "null"], maxLength: 100 }
+        avatarKey: { type: string, enum: ["1", "2", "3", "4", "5", "6"] }
+
+    ForgotPasswordInput:
+      type: object
+      required: [email]
+      properties:
+        email: { type: string, minLength: 1 }
+
+    ResetPasswordInput:
+      type: object
+      required: [token, newPassword]
+      properties:
+        token: { type: string, minLength: 1 }
+        newPassword: { type: string, minLength: 8 }
+
+    PasswordResetAcknowledgement:
+      type: object
+      required: [ok, message]
+      properties:
+        ok: { type: boolean }
+        message: { type: string }
+
+    CreateInvitationInput:
+      type: object
+      required: [email]
+      properties:
+        email: { type: string }
+        role: { type: string, enum: [admin, manager, member, guest], default: member }
+        locale: { type: string, enum: [uk, cs] }
+
+    InvitationDelivery:
+      type: object
+      required: [delivery]
+      properties:
+        delivery: { type: string, enum: [console, smtp] }
+        token:
+          type: string
+          description: Present only once for local non-production console delivery.
+
+    AdminUser:
+      type: object
+      required: [id, email, displayName, role, status, locale, avatarKey, lastLoginAt, createdAt]
+      properties:
+        id: { type: string }
+        email: { type: string }
+        displayName: { type: string }
+        role: { type: string, enum: [admin, manager, member, guest] }
+        status: { type: string, enum: [active, suspended] }
+        locale: { type: string, enum: [uk, cs] }
+        avatarKey: { type: [string, "null"] }
+        lastLoginAt: { type: [string, "null"] }
+        createdAt: { type: string }
+
+    AdminUserList:
+      type: object
+      required: [users]
+      properties: { users: { type: array, items: { $ref: "#/components/schemas/AdminUser" } } }
+
+    UpdateAdminUserInput:
+      type: object
+      properties:
+        role: { type: string, enum: [admin, manager, member, guest] }
+        status: { type: string, enum: [active, suspended] }
+        avatarKey: { type: string, enum: ["1", "2", "3", "4", "5", "6"] }
+        displayName: { type: string, minLength: 1, maxLength: 100 }
+
+    AuditLogEntry:
+      type: object
+      properties:
+        id: { type: string }
+        actor_id: { type: [string, "null"] }
+        actor_name: { type: [string, "null"] }
+        action: { type: string }
+        entity_type: { type: [string, "null"] }
+        entity_id: { type: [string, "null"] }
+        meta: { type: [object, "null"], additionalProperties: true }
+        ip_address: { type: [string, "null"] }
+        created_at: { type: string }
+
+    AuditLogPage:
+      type: object
+      required: [logs, total]
+      properties:
+        logs: { type: array, items: { $ref: "#/components/schemas/AuditLogEntry" } }
+        total: { type: integer }
+
+    Setting:
+      type: object
+      required: [key, value]
+      properties: { key: { type: string }, value: { type: string }, updatedAt: { type: string } }
+
+    SettingList:
+      type: object
+      required: [settings]
+      properties: { settings: { type: array, items: { $ref: "#/components/schemas/Setting" } } }
+
+    UpdateSettingInput:
+      type: object
+      required: [key, value]
+      properties: { key: { type: string, minLength: 1 }, value: { type: string } }
+
+    ReadinessStatus:
+      type: object
+      required: [status, checks, timestamp]
+      properties:
+        status: { type: string, enum: [ready, not_ready] }
+        checks: { type: object, required: [database], properties: { database: { type: string, enum: [ok, unavailable] } } }
+        timestamp: { type: string }
+
+    UserPicker:
+      type: object
+      required: [id, displayName, email, role]
+      properties:
+        id: { type: string }
+        displayName: { type: string }
+        email: { type: string }
+        role: { type: string, enum: [admin, manager, member, guest] }
+        avatarKey: { type: [string, "null"] }
+
+    UserPickerList:
+      type: object
+      required: [users]
+      properties: { users: { type: array, items: { $ref: "#/components/schemas/UserPicker" } } }
+
+    ProjectMemberDirectory:
+      type: object
+      required: [members]
+      properties:
+        members:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/ProjectMember"
+              - type: object
+                required: [projectName, projectCode]
+                properties: { projectName: { type: string }, projectCode: { type: string } }
+
+    KbArticle:
+      type: object
+      required: [id, projectId, path, depth, title, bodyMd, bodyHtml, tags, status, createdById, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        parentId: { type: [string, "null"] }
+        path: { type: string }
+        depth: { type: integer, minimum: 0, maximum: 3 }
+        title: { type: string }
+        bodyMd: { type: string }
+        bodyHtml: { type: string }
+        tags: { type: array, items: { type: string } }
+        status: { type: string, enum: [draft, published, archived] }
+        createdById: { type: string }
+        updatedById: { type: [string, "null"] }
+        publishedAt: { type: [string, "null"] }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    KbArticleList:
+      type: object
+      required: [articles]
+      properties: { articles: { type: array, items: { $ref: "#/components/schemas/KbArticle" } } }
+
+    CreateKbArticleInput:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 300 }
+        bodyMd: { type: string, default: "" }
+        tags: { type: array, items: { type: string }, default: [] }
+        parentId: { type: string }
+
+    UpdateKbArticleInput:
+      type: object
+      properties:
+        title: { type: string, minLength: 1, maxLength: 300 }
+        bodyMd: { type: string }
+        tags: { type: array, items: { type: string } }
+        parentId: { type: [string, "null"] }
+
+    KbArticleVersion:
+      type: object
+      required: [id, articleId, versionNo, bodyMd, bodyHtml, tags, createdById, createdAt]
+      properties:
+        id: { type: string }
+        articleId: { type: string }
+        versionNo: { type: integer }
+        bodyMd: { type: string }
+        bodyHtml: { type: string }
+        tags: { type: array, items: { type: string } }
+        createdById: { type: string }
+        createdAt: { type: string }
+
+    KbVersionList:
+      type: object
+      required: [versions]
+      properties: { versions: { type: array, items: { $ref: "#/components/schemas/KbArticleVersion" } } }
+
+    LibraryCategory:
+      type: string
+      enum: [template, standard, instruction, material, report, other]
+
+    LibraryItem:
+      type: object
+      required: [id, title, category, addedById, createdAt, updatedAt]
+      properties: { id: { type: string }, title: { type: string }, description: { type: [string, "null"] }, category: { $ref: "#/components/schemas/LibraryCategory" }, url: { type: [string, "null"] }, addedById: { type: string }, archivedAt: { type: [string, "null"] }, createdAt: { type: string }, updatedAt: { type: string } }
+    LibraryItemList:
+      type: object
+      required: [items]
+      properties: { items: { type: array, items: { $ref: "#/components/schemas/LibraryItem" } } }
+    CreateLibraryItemInput:
+      type: object
+      required: [title]
+      properties: { title: { type: string, minLength: 1, maxLength: 200 }, description: { type: string, maxLength: 1000 }, category: { $ref: "#/components/schemas/LibraryCategory" }, url: { type: [string, "null"], maxLength: 2000 } }
+    UpdateLibraryItemInput:
+      type: object
+      properties: { title: { type: string, minLength: 1, maxLength: 200 }, description: { type: [string, "null"], maxLength: 1000 }, category: { $ref: "#/components/schemas/LibraryCategory" }, url: { type: [string, "null"], maxLength: 2000 } }
+
+    InfoBlock:
+      type: object
+      required: [id, projectId, title, body, position, createdAt, updatedAt]
+      properties: { id: { type: string }, projectId: { type: string }, title: { type: string }, body: { type: string }, position: { type: integer }, createdAt: { type: string }, updatedAt: { type: string } }
+    InfoBlockList:
+      type: object
+      required: [blocks]
+      properties: { blocks: { type: array, items: { $ref: "#/components/schemas/InfoBlock" } } }
+    InfoBlockInput:
+      type: object
+      properties: { title: { type: string, minLength: 1, maxLength: 200 }, body: { type: string, maxLength: 10000 } }
+
+    LogEntry:
+      type: object
+      required: [id, projectId, actorId, entryType, title, bodyMd, occurredAt, createdAt, updatedAt]
+      properties: { id: { type: string }, projectId: { type: string }, actorId: { type: string }, entryType: { type: string, enum: [decision, milestone, risk, note] }, title: { type: string }, bodyMd: { type: string }, occurredAt: { type: string }, deletedAt: { type: [string, "null"] }, createdAt: { type: string }, updatedAt: { type: string } }
+    LogEntryList:
+      type: object
+      required: [entries]
+      properties: { entries: { type: array, items: { $ref: "#/components/schemas/LogEntry" } } }
+    LogEntryInput:
+      type: object
+      properties: { entryType: { type: string, enum: [decision, milestone, risk, note] }, title: { type: string, minLength: 1, maxLength: 500 }, bodyMd: { type: string }, occurredAt: { type: string } }
+
+    DeletionRequestAcknowledgement:
+      type: object
+      required: [status]
+      properties: { status: { type: string, enum: [pending] } }
+    AcceptInvitationInput:
+      type: object
+      required: [token, displayName, password]
+      properties: { token: { type: string, minLength: 1 }, displayName: { type: string, minLength: 1, maxLength: 200 }, password: { type: string, minLength: 8 } }
+    AcceptedInvitationUser:
+      type: object
+      required: [id, email, displayName, role, locale]
+      properties: { id: { type: string }, email: { type: string }, displayName: { type: string }, role: { type: string, enum: [admin, manager, member, guest] }, locale: { type: string, enum: [uk, cs] } }
+
+    LoginCredentials:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+          minLength: 1
+
+    CurrentUser:
+      type: object
+      required:
+        - id
+        - email
+        - displayName
+        - role
+        - locale
+        - timezone
+        - status
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        displayName:
+          type: string
+        position:
+          type: ["string", "null"]
+        role:
+          type: string
+          enum: [admin, manager, member, guest]
+        locale:
+          type: string
+          enum: [uk, cs]
+        timezone:
+          type: string
+        status:
+          type: string
+          enum: [active, suspended]
+        lastLoginAt:
+          type: ["string", "null"]
+
+    Project:
+      type: object
+      required:
+        - id
+        - code
+        - name
+        - status
+        - ownerId
+        - path
+        - depth
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        parentId:
+          type: ["string", "null"]
+        path:
+          type: string
+        depth:
+          type: integer
+        code:
+          type: string
+        name:
+          type: string
+        clientName:
+          type: ["string", "null"]
+        ownerId:
+          type: string
+        status:
+          type: string
+          enum: [planned, active, on_hold, done, archived]
+        kind:
+          type: ["string", "null"]
+        startsOn:
+          type: ["string", "null"]
+        dueOn:
+          type: ["string", "null"]
+        descriptionMd:
+          type: ["string", "null"]
+        summary:
+          type: ["string", "null"]
+        totalHours:
+          type: ["integer", "null"]
+        archivedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ProjectList:
+      type: object
+      required:
+        - projects
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/Project"
+
+    CreateProjectInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        code:
+          type: string
+          maxLength: 20
+        summary:
+          type: string
+          maxLength: 500
+        descriptionMd:
+          type: string
+        kind:
+          type: string
+          enum: [client, internal, rd]
+        startsOn:
+          type: string
+        dueOn:
+          type: string
+        totalHours:
+          type: integer
+          minimum: 1
+        clientName:
+          type: string
+          maxLength: 200
+        parentId:
+          type: string
+
+    UpdateProjectInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        summary:
+          type: ["string", "null"]
+        descriptionMd:
+          type: ["string", "null"]
+        kind:
+          type: ["string", "null"]
+          enum: [client, internal, rd, null]
+        startsOn:
+          type: ["string", "null"]
+        dueOn:
+          type: ["string", "null"]
+        totalHours:
+          type: ["integer", "null"]
+        clientName:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [planned, active, on_hold, done, archived]
+
+    MoveProjectInput:
+      type: object
+      required:
+        - newParentId
+      properties:
+        newParentId:
+          type: ["string", "null"]
+
+    ProjectMember:
+      type: object
+      required:
+        - id
+        - projectId
+        - userId
+        - role
+        - joinedAt
+        - userDisplayName
+        - userEmail
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        userId:
+          type: string
+        role:
+          type: string
+          enum: [owner, manager, member, viewer]
+        addedById:
+          type: ["string", "null"]
+        joinedAt:
+          type: string
+        userDisplayName:
+          type: string
+        userEmail:
+          type: string
+
+    ProjectMemberList:
+      type: object
+      required:
+        - members
+      properties:
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProjectMember"
+
+    AddMemberInput:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+        role:
+          type: string
+          enum: [owner, manager, member, viewer]
+
+    Stage:
+      type: object
+      required:
+        - id
+        - projectId
+        - name
+        - position
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        name:
+          type: string
+        color:
+          type: ["string", "null"]
+        position:
+          type: integer
+        completedAt:
+          type: ["string", "null"]
+        completedById:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    StageList:
+      type: object
+      required:
+        - stages
+      properties:
+        stages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Stage"
+
+    CreateStageInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        color:
+          type: string
+
+    UpdateStageInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        color:
+          type: ["string", "null"]
+
+    ReorderStagesInput:
+      type: object
+      required:
+        - orderedIds
+      properties:
+        orderedIds:
+          type: array
+          items:
+            type: string
+
+    Task:
+      type: object
+      required:
+        - id
+        - projectId
+        - code
+        - title
+        - status
+        - priority
+        - path
+        - depth
+        - position
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        parentTaskId:
+          type: ["string", "null"]
+        path:
+          type: string
+        depth:
+          type: integer
+        code:
+          type: string
+        title:
+          type: string
+        descriptionMd:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [todo, in_progress, blocked, review, done]
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        assigneeId:
+          type: ["string", "null"]
+        stageId:
+          type: ["string", "null"]
+        dueAt:
+          type: ["string", "null"]
+        position:
+          type: integer
+        completedAt:
+          type: ["string", "null"]
+        archivedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    TaskList:
+      type: object
+      required:
+        - tasks
+        - total
+        - limit
+        - offset
+        - hasMore
+      properties:
+        tasks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Task"
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+        hasMore:
+          type: boolean
+
+    CreateTaskInput:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        descriptionMd:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        assigneeId:
+          type: string
+        dueAt:
+          type: string
+        parentTaskId:
+          type: string
+        stageId:
+          type: string
+
+    UpdateTaskInput:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        descriptionMd:
+          type: ["string", "null"]
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        assigneeId:
+          type: ["string", "null"]
+        dueAt:
+          type: ["string", "null"]
+        stageId:
+          type: ["string", "null"]
+        position:
+          type: integer
+
+    UpdateTaskStatusInput:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [todo, in_progress, blocked, review, done]
+
+    ChecklistItem:
+      type: object
+      required:
+        - id
+        - taskId
+        - title
+        - position
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        taskId:
+          type: string
+        title:
+          type: string
+        position:
+          type: integer
+        completedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ChecklistList:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChecklistItem"
+
+    CreateChecklistItemInput:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+
+    UpdateChecklistItemInput:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+
+    Client:
+      type: object
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        website:
+          type: ["string", "null"]
+        industry:
+          type: ["string", "null"]
+        internalNote:
+          type: ["string", "null"]
+        archivedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ClientList:
+      type: object
+      required:
+        - clients
+      properties:
+        clients:
+          type: array
+          items:
+            $ref: "#/components/schemas/Client"
+
+    CreateClientInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        website:
+          type: string
+        industry:
+          type: string
+        internalNote:
+          type: string
+
+    UpdateClientInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        website:
+          type: ["string", "null"]
+        industry:
+          type: ["string", "null"]
+        internalNote:
+          type: ["string", "null"]
+
+    Contact:
+      type: object
+      required:
+        - id
+        - clientId
+        - firstName
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        clientId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        position:
+          type: ["string", "null"]
+        internalNote:
+          type: ["string", "null"]
+        archivedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ContactList:
+      type: object
+      required:
+        - contacts
+      properties:
+        contacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Contact"
+
+    CreateContactInput:
+      type: object
+      required:
+        - firstName
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        position:
+          type: string
+        internalNote:
+          type: string
+
+    UpdateContactInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        lastName:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        position:
+          type: ["string", "null"]
+        internalNote:
+          type: ["string", "null"]
+
+    ActivityEvent:
+      type: object
+      required:
+        - id
+        - entityType
+        - entityId
+        - actorId
+        - actorName
+        - eventType
+        - payload
+        - createdAt
+      properties:
+        id:
+          type: string
+        projectId:
+          type: ["string", "null"]
+        entityType:
+          type: string
+        entityId:
+          type: string
+        actorId:
+          type: string
+        actorName:
+          type: string
+        eventType:
+          type: string
+        payload:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+
+    JournalPage:
+      type: object
+      required:
+        - events
+      properties:
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActivityEvent"
+        nextCursor:
+          type: ["string", "null"]
+
+    Comment:
+      type: object
+      required: [id, entityType, entityId, authorId, bodyMd, visibility, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+        entityType:
+          type: string
+        entityId:
+          type: string
+        authorId:
+          type: string
+        bodyMd:
+          type: string
+        visibility:
+          type: string
+          enum: [internal, external]
+        editedAt:
+          type: ["string", "null"]
+        deletedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    CommentList:
+      type: object
+      required: [comments]
+      properties:
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Comment"
+
+    AddCommentInput:
+      type: object
+      required: [entityType, entityId, bodyMd]
+      properties:
+        entityType:
+          type: string
+          enum: [project, task, kb_article]
+        entityId:
+          type: string
+        bodyMd:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        visibility:
+          type: string
+          enum: [internal, external]
+
+    EditCommentInput:
+      type: object
+      required: [bodyMd]
+      properties:
+        bodyMd:
+          type: string
+          minLength: 1
+          maxLength: 10000
+
+    Conversation:
+      type: object
+      required: [id, kind, createdById, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+          enum: [direct, project]
+        projectId:
+          type: ["string", "null"]
+        title:
+          type: ["string", "null"]
+        createdById:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    ConversationList:
+      type: object
+      required: [conversations]
+      properties:
+        conversations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Conversation"
+
+    ConversationMember:
+      type: object
+      required: [id, conversationId, userId, joinedAt]
+      properties:
+        id:
+          type: string
+        conversationId:
+          type: string
+        userId:
+          type: string
+        lastReadMessageId:
+          type: ["string", "null"]
+        joinedAt:
+          type: string
+
+    ConversationMemberList:
+      type: object
+      required: [members]
+      properties:
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationMember"
+
+    Message:
+      type: object
+      required: [id, conversationId, authorId, bodyMd, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+        conversationId:
+          type: string
+        authorId:
+          type: string
+        bodyMd:
+          type: string
+        replyToId:
+          type: ["string", "null"]
+        editedAt:
+          type: ["string", "null"]
+        deletedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    MessageList:
+      type: object
+      required: [messages]
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+
+    SendMessageInput:
+      type: object
+      required: [bodyMd]
+      properties:
+        bodyMd:
+          type: string
+          minLength: 1
+          maxLength: 20000
+        replyToId:
+          type: string
+
+    EditMessageInput:
+      type: object
+      required: [bodyMd]
+      properties:
+        bodyMd:
+          type: string
+          minLength: 1
+          maxLength: 20000
+
+    Notification:
+      type: object
+      required: [id, userId, kind, payload, createdAt]
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        kind:
+          type: string
+        actorId:
+          type: ["string", "null"]
+        entityType:
+          type: ["string", "null"]
+        entityId:
+          type: ["string", "null"]
+        payload:
+          type: string
+        readAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    NotificationList:
+      type: object
+      required: [notifications, unreadCount]
+      properties:
+        notifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Notification"
+        unreadCount:
+          type: integer
+
+    MentionSearchResult:
+      type: object
+      required: [users]
+      properties:
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              username:
+                type: ["string", "null"]
+              displayName:
+                type: string
+
+    CreateDirectConversationInput:
+      type: object
+      required: [otherUserId]
+      properties:
+        otherUserId:
+          type: string
+
+    CreateProjectConversationInput:
+      type: object
+      required: [projectId, title]
+      properties:
+        projectId:
+          type: string
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+
+    FileRecord:
+      type: object
+      required: [id, originalFilename, mimeType, sizeBytes, sha256, contentHash, status, storageLocation, versionNo, documentGroupId, entityType, entityId, uploaderId, visibility, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+        originalFilename:
+          type: string
+        mimeType:
+          type: string
+        sizeBytes:
+          type: integer
+        sha256:
+          type: string
+        contentHash:
+          type: string
+        status:
+          type: string
+          enum: [pending, stored, failed, missing]
+        storageLocation:
+          type: string
+          enum: [staging, dropbox]
+        storageKey:
+          type: string
+        dropboxPath:
+          type: ["string", "null"]
+        versionNo:
+          type: integer
+        documentGroupId:
+          type: string
+        entityType:
+          type: string
+        entityId:
+          type: string
+        uploaderId:
+          type: string
+        retryCount:
+          type: integer
+        visibility:
+          type: string
+          enum: [internal, external]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    FileList:
+      type: object
+      required: [files]
+      properties:
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/FileRecord"
+
+    DropboxStatus:
+      type: object
+      required: [connected]
+      properties:
+        connected:
+          type: boolean
+        email:
+          type: string
+        space:
+          type: object
+          nullable: true
+          properties:
+            used:
+              type: integer
+            allocated:
+              type: integer

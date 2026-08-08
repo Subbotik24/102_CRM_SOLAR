@@ -1,0 +1,95 @@
+{
+  "title": "Проєкти",
+  "new": "Новий проєкт",
+  "subtitle": "Активні замовлення та технічний архів.",
+  "notFound": "Проєкт не знайдено.",
+  "noProjects": "Проєктів ще немає. Створіть перший.",
+  "noTasksYet": "Завдань ще немає.",
+  "noStagesYet": "Етапів ще немає.",
+  "noMembersAdded": "Учасників не додано.",
+  "taskPlaceholder": "Напр. Налаштувати CI pipeline",
+  "stagePlaceholder": "Напр. Перегляд дизайну",
+  "parentProjectPlaceholder": "— кореневий рівень —",
+  "projectNamePlaceholder": "Напр. Клієнтський портал v2",
+  "descriptionPlaceholder": "Короткий опис…",
+  "completed": "Завершено",
+  "budget": "Бюджет:",
+  "archiveProject": "Архівувати проєкт",
+  "confirmArchive": "Підтвердити архівацію",
+  "archive": {
+    "title": "Архів",
+    "subtitle": "Архівовані проєкти.",
+    "empty": "Архів порожній.",
+    "restore": "Відновити",
+    "archivedOn": "Архівовано"
+  },
+  "start": "Початок:",
+  "due": "Термін:",
+  "showMore": "Показати більше",
+  "showLess": "Показати менше",
+  "allStatuses": "Всі статуси",
+  "addStage": "Додати етап",
+  "confirmDeleteStage": "Видалити цей етап?",
+  "noStage": "— без етапу —",
+  "parentProject": "Батьківський проєкт",
+  "subprojects": "Дочірні проєкти",
+  "includeSubprojectTasks": "Включно з підпроєктами",
+  "subprojectTask": "Задача з підпроєкту",
+  "noDueDate": "Без терміну",
+  "journal": "Журнал",
+  "tabs": {
+    "tasks": "Завдання",
+    "stages": "Етапи",
+    "members": "Учасники",
+    "info": "Додаткова інформація"
+  },
+  "info": {
+    "empty": "Додаткової інформації ще немає.",
+    "addBlock": "Додати блок",
+    "titlePlaceholder": "Напр. Адреса об’єкта",
+    "bodyPlaceholder": "Детальна інформація…",
+    "confirmDelete": "Видалити цей блок?"
+  },
+  "view": {
+    "list": "Список",
+    "kanban": "Канбан",
+    "byStage": "За етапами",
+    "timeline": "Таймлайн"
+  },
+  "status": {
+    "planned": "Заплановано",
+    "active": "Активний",
+    "on_hold": "Призупинено",
+    "done": "Завершено",
+    "archived": "Архівовано"
+  },
+  "fields": {
+    "code": "Код",
+    "name": "Назва",
+    "client": "Клієнт",
+    "owner": "Відповідальний",
+    "startDate": "Початок",
+    "dueDate": "Термін",
+    "totalHours": "Год. (план)",
+    "description": "Опис",
+    "summary": "Короткий опис",
+    "parentProject": "Батьківський проєкт (необов'язково)"
+  },
+  "members": {
+    "title": "Учасники",
+    "addMember": "Додати учасника",
+    "selectUser": "— обрати користувача —",
+    "add": "Додати",
+    "remove": "Видалити",
+    "confirmRemoveMember": "Видалити цього учасника з проєкту?",
+    "roles": {
+      "owner": "Власник",
+      "manager": "Менеджер",
+      "member": "Учасник",
+      "viewer": "Спостерігач",
+      "lead": "Керівник",
+      "contributor": "Учасник",
+      "reader": "Спостерігач"
+    }
+  }
+}

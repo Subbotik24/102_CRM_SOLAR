@@ -1,0 +1,73 @@
+{
+  "title": "Administrace",
+  "users": {
+    "title": "Uživatelé",
+    "invite": "Pozvat",
+    "suspend": "Pozastavit",
+    "reactivate": "Obnovit",
+    "inviteNew": "Pozvat nového uživatele",
+    "invitedFor": "Pozvánka vytvořena pro",
+    "copyLink": "Zkopírujte tento odkaz a pošlete ho uživateli. Platí 7 dní.",
+    "emailSent": "Odkaz byl bezpečně odeslán e-mailem.",
+    "searchPlaceholder": "Hledat uživatele...",
+    "noUsers": "Žádní uživatelé nenalezeni",
+    "changeRole": "Změnit roli",
+    "suspendConfirm": "Pozastavit tohoto uživatele?",
+    "editProfile": "Upravit člena",
+    "deleteUser": "Smazat",
+    "deleteConfirm": "Smazat tohoto uživatele trvale? Tuto akci nelze vrátit.",
+    "deleteBlocked": "Nelze smazat: uživatel má přidružená data. Pozastavte ho místo toho.",
+    "resetLink": "Odkaz pro obnovení",
+    "resetLinkTitle": "Odkaz pro obnovení hesla",
+    "resetLinkHint": "Zkopírujte a předejte tento odkaz ručně. Po zavření se již znovu nezobrazí.",
+    "name": "Jméno",
+    "namePlaceholder": "Jméno člena",
+    "columns": {
+      "user": "Uživatel",
+      "role": "Role",
+      "status": "Stav",
+      "lastLogin": "Poslední přihlášení",
+      "actions": "Akce"
+    },
+    "status": {
+      "active": "Aktivní",
+      "suspended": "Pozastaven"
+    }
+  },
+  "dropbox": {
+    "title": "Dropbox",
+    "connect": "Připojit",
+    "disconnect": "Odpojit",
+    "connected": "Připojeno",
+    "notConnected": "Nepřipojeno",
+    "description": "Připojte Dropbox pro archivaci nahraných souborů pro dlouhodobé uložení.",
+    "lowSpace": "Málo místa",
+    "usedOf": "použito z",
+    "offlineNotice": "Soubory nahrané bez Dropboxu jsou uloženy v App Storage a budou automaticky přeneseny po připojení."
+  },
+  "auditLog": {
+    "title": "Auditní protokol",
+    "exportCsv": "Exportovat CSV",
+    "filterPlaceholder": "Filtrovat podle akce (např. auth.login_failure)",
+    "noEvents": "Žádné auditní události nenalezeny",
+    "system": "systém",
+    "showing": "Zobrazeno",
+    "of": "z",
+    "previous": "Předchozí",
+    "next": "Další",
+    "columns": {
+      "time": "Čas",
+      "actor": "Aktér",
+      "action": "Akce",
+      "entity": "Entita",
+      "ip": "IP"
+    }
+  },
+  "settings": {
+    "title": "Nastavení",
+    "addUpdate": "Přidat / aktualizovat nastavení",
+    "key": "klíč",
+    "value": "hodnota",
+    "saved": "Uloženo"
+  }
+}

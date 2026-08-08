@@ -1,0 +1,31 @@
+{
+  "name": "crm-solar",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
+    "build": "pnpm run typecheck && pnpm -r --if-present run build",
+    "test": "pnpm --filter @workspace/tests run test:unit",
+    "test:integration": "pnpm --filter @workspace/tests exec tsx scripts/run-integration.ts",
+    "test:e2e": "pnpm --filter @workspace/tests run test:e2e",
+    "db:generate": "pnpm --filter @workspace/db run db:generate",
+    "db:migrate": "pnpm --filter @workspace/db run db:migrate",
+    "db:migrate:status": "pnpm --filter @workspace/db run db:migrate:status",
+    "db:migrate:adopt": "pnpm --filter @workspace/db run db:migrate:adopt",
+    "openapi:parity": "pnpm --filter @workspace/scripts run openapi:parity",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck:libs": "tsc --build",
+    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
+    "verify:core": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm --filter @workspace/api-server run test:access && pnpm run build && pnpm audit --prod"
+  },
+  "private": true,
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.5",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.65.0"
+  }
+}

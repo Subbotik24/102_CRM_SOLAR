@@ -1,0 +1,33 @@
+{
+  "title": "Журнал",
+  "chronicle": "Хроніка",
+  "export": "Експортувати",
+  "exportFailed": "Помилка експорту. Спробуйте ще раз.",
+  "addEntry": "Додати запис",
+  "titleField": "Заголовок *",
+  "detailsField": "Деталі (підтримує Markdown)",
+  "activityJournal": "Журнал активності",
+  "noActivity": "Активності ще немає.",
+  "loadMore": "Завантажити більше",
+  "similar": "схожих",
+  "filters": {
+    "eventType": "Тип події",
+    "author": "Автор",
+    "dateRange": "Діапазон дат",
+    "includeSubprojects": "Включити підпроєкти"
+  },
+  "logEntry": {
+    "types": {
+      "decision": "Рішення",
+      "milestone": "Milestone",
+      "risk": "Ризик",
+      "note": "Нотатка"
+    }
+  },
+  "exportFormats": {
+    "markdown": "Markdown",
+    "pdf": "PDF",
+    "download": "Завантажити"
+  },
+  "loadFailed": "Помилка завантаження журналу."
+}

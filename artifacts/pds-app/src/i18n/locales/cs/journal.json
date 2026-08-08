@@ -1,0 +1,33 @@
+{
+  "title": "Deník",
+  "chronicle": "Kronika",
+  "export": "Exportovat",
+  "exportFailed": "Export selhal. Zkuste to znovu.",
+  "addEntry": "Přidat záznam",
+  "titleField": "Nadpis *",
+  "detailsField": "Podrobnosti (podporuje Markdown)",
+  "activityJournal": "Deník aktivit",
+  "noActivity": "Zatím žádná aktivita.",
+  "loadMore": "Načíst více",
+  "similar": "podobných",
+  "filters": {
+    "eventType": "Typ události",
+    "author": "Autor",
+    "dateRange": "Časové rozmezí",
+    "includeSubprojects": "Zahrnout podprojekty"
+  },
+  "logEntry": {
+    "types": {
+      "decision": "Rozhodnutí",
+      "milestone": "Milník",
+      "risk": "Riziko",
+      "note": "Poznámka"
+    }
+  },
+  "exportFormats": {
+    "markdown": "Markdown",
+    "pdf": "PDF",
+    "download": "Stáhnout"
+  },
+  "loadFailed": "Nepodařilo se načíst deník."
+}

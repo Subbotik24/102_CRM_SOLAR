@@ -1,0 +1,229 @@
+{
+  "nav": {
+    "home": "Přehled",
+    "tasks": "Moje úkoly",
+    "projects": "Projekty",
+    "chat": "Chat",
+    "calendar": "Kalendář",
+    "more": "Více",
+    "clients": "Zákazníci",
+    "members": "Členové",
+    "settings": "Nastavení",
+    "library": "Knihovna",
+    "kanban": "Kanban",
+    "kanbanSubtitle": "Všechny úkoly přes všechny projekty",
+    "archive": "Archiv"
+  },
+  "actions": {
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "delete": "Smazat",
+    "edit": "Upravit",
+    "create": "Vytvořit",
+    "confirm": "Potvrdit",
+    "back": "Zpět",
+    "close": "Zavřít",
+    "search": "Hledat",
+    "filter": "Filtr",
+    "export": "Exportovat",
+    "add": "Přidat",
+    "remove": "Odebrat",
+    "view": "Zobrazit",
+    "send": "Odeslat",
+    "post": "Odeslat",
+    "upload": "Nahrát",
+    "download": "Stáhnout",
+    "publish": "Zveřejnit",
+    "archive": "Archivovat",
+    "done": "Hotovo",
+    "copy": "Kopírovat",
+    "reactivate": "Obnovit",
+    "suspend": "Pozastavit",
+    "invite": "Pozvat",
+    "retry": "Zkusit znovu",
+    "reload": "Obnovit"
+  },
+  "status": {
+    "loading": "Načítání...",
+    "error": "Chyba",
+    "noData": "Žádná data",
+    "empty": "Prázdné",
+    "unexpectedError": "Nastala neočekávaná chyba. Zkuste to prosím znovu."
+  },
+  "roles": {
+    "admin": "Administrátor",
+    "manager": "Manažer",
+    "member": "Člen",
+    "guest": "Host"
+  },
+  "exit": "Odhlásit",
+  "user": "Uživatel",
+  "search": {
+    "placeholder": "Hledat…",
+    "shortcutHint": "⌘K",
+    "minChars": "Zadejte alespoň 2 znaky pro vyhledávání…",
+    "noResults": "Žádné výsledky pro",
+    "categories": {
+      "projects": "Projekty",
+      "tasks": "Úkoly",
+      "kb": "ZB",
+      "comments": "Komentáře",
+      "files": "Soubory"
+    }
+  },
+  "notifications": {
+    "title": "Oznámení",
+    "markAllRead": "Označit vše jako přečtené",
+    "noNotifications": "Žádná oznámení",
+    "mention": "Zmínil(-a) vás",
+    "taskAssigned": "Úkol přiřazen",
+    "newMessage": "Nová zpráva",
+    "newComment": "Nový komentář",
+    "taskDueToday": "Termín úkolu je dnes",
+    "taskOverdue": "Úkol je po termínu",
+    "deletionRequested": "Žádost o smazání"
+  },
+  "comments": {
+    "title": "Komentáře",
+    "placeholder": "Přidat komentář… (podporuje @zmínky)",
+    "post": "Odeslat",
+    "noComments": "Zatím žádné komentáře. Buďte první.",
+    "edited": "(upraveno)",
+    "visibility": {
+      "external": "Veřejný",
+      "internal": "Interní"
+    }
+  },
+  "members": {
+    "pageTitle": "Členové",
+    "pageSubtitle": "Všichni členové projektů.",
+    "noMembers": "Žádní členové nenalezeni.",
+    "project": "Projekt",
+    "role": "Role",
+    "changeAvatar": "Barva avataru:"
+  },
+  "library": {
+    "title": "Knihovna",
+    "subtitle": "Pracovní dokumenty, šablony a standardy týmu",
+    "categories": "Kategorie",
+    "addItem": "Přidat dokument",
+    "editItem": "Upravit dokument",
+    "open": "Otevřít",
+    "empty": "V této kategorii zatím nejsou žádné dokumenty",
+    "addFirst": "Přidat první",
+    "fields": {
+      "title": "Název",
+      "titlePlaceholder": "Např. Šablona smlouvy",
+      "category": "Kategorie",
+      "description": "Popis",
+      "descriptionPlaceholder": "Krátký popis dokumentu…",
+      "url": "Odkaz (volitelně)"
+    },
+    "cat": {
+      "all": "Vše",
+      "template": "Šablony",
+      "standard": "Standardy",
+      "instruction": "Pokyny",
+      "material": "Materiály",
+      "report": "Zprávy",
+      "other": "Ostatní"
+    }
+  },
+  "clients": {
+    "pageTitle": "Zákazníci",
+    "pageSubtitle": "Zákaznické společnosti a kontakty.",
+    "newClient": "Nový zákazník",
+    "noClients": "Zatím žádní zákazníci.",
+    "addFirst": "Přidat prvního zákazníka",
+    "editClient": "Upravit zákazníka",
+    "noClient": "— bez zákazníka —",
+    "fields": {
+      "name": "Název",
+      "namePlaceholder": "Např. Acme Corp",
+      "industry": "Odvětví",
+      "industryPlaceholder": "Např. Stavebnictví",
+      "website": "Web",
+      "websitePlaceholder": "https://example.com",
+      "avatar": "Barva avataru"
+    },
+    "contacts": {
+      "title": "Kontakty",
+      "noContacts": "Zatím žádné kontakty.",
+      "addContact": "Přidat kontakt",
+      "fields": {
+        "firstName": "Jméno",
+        "firstNamePlaceholder": "Jan",
+        "lastName": "Příjmení",
+        "lastNamePlaceholder": "Novák",
+        "position": "Pozice / role",
+        "positionPlaceholder": "CTO",
+        "email": "E-mail",
+        "emailPlaceholder": "jan@example.com",
+        "phone": "Telefon",
+        "phonePlaceholder": "+420 000 000 000"
+      }
+    },
+    "notFound": "Zákazník nenalezen.",
+    "noClient": "— bez zákazníka —"
+  },
+  "notFound": {
+    "title": "404 // NOT_FOUND",
+    "message": "Požadovaný zdroj nebyl nalezen nebo nemáte dostatečná oprávnění."
+  },
+  "home": {
+    "goodMorning": "Dobré ráno",
+    "goodDay": "Dobrý den",
+    "goodEvening": "Dobrý večer",
+    "activeProjects": "Aktivní projekty",
+    "openTasks": "Otevřené úkoly",
+    "overdue": "Po termínu",
+    "blocked": "Blokováno",
+    "myTasks": "Moje úkoly",
+    "noTasks": "Žádné otevřené úkoly — skvěle!",
+    "more": "dalších",
+    "deliveryHealth": "Stav realizace",
+    "teamScope": "Přehled týmu",
+    "personalScope": "Osobní přehled",
+    "taskDistribution": "Rozdělení úkolů",
+    "taskDistributionDescription": "Aktuální práce podle stavů",
+    "projectPortfolio": "Portfolio projektů",
+    "projectPortfolioDescription": "Rozdělení dostupných projektů podle stavu",
+    "upcomingDeadlines": "Blížící se termíny",
+    "next14Days": "Následujících 14 dní",
+    "noUpcomingDeadlines": "V příštích 14 dnech nejsou žádné termíny",
+    "needsAttention": "Vyžaduje pozornost",
+    "needsAttentionDescription": "Úkoly po termínu a blokované úkoly",
+    "allHealthy": "Žádné kritické problémy",
+    "allHealthyDescription": "Momentálně nejsou žádné úkoly po termínu ani blokované",
+    "restrictedTitle": "Přehled není pro hosta dostupný",
+    "restrictedDescription": "Host nemá přístup k interním projektům a úkolům",
+    "loadFailed": "Data přehledu se nepodařilo načíst"
+  },
+  "settings": {
+    "members": "Členové",
+    "system": "Systém"
+  },
+  "calendar": {
+    "subtitle": "Úkoly podle termínů",
+    "today": "Dnes",
+    "more": "dalších"
+  },
+  "kanban": {
+    "dropHere": "Přetáhněte sem",
+    "taskCount": "úk."
+  },
+  "more": {
+    "title": "Více",
+    "subtitle": "Nastavení, předvolby a správa účtu.",
+    "profileSettings": "Nastavení profilu",
+    "profileSubtitle": "Aktualizujte osobní údaje",
+    "preferences": "Předvolby",
+    "preferencesSubtitle": "Oznámení a motiv",
+    "language": "Jazyk",
+    "languageSubtitle": "Změnit jazyk rozhraní",
+    "settingsSubtitle": "Členové a systémová nastavení",
+    "archiveSubtitle": "Archivované projekty",
+    "loggingOut": "Odhlašování...",
+    "logOut": "Odhlásit se"
+  }
+}

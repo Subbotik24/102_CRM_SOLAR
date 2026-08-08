@@ -1,0 +1,22 @@
+name: Bug report
+description: Report a reproducible problem in CRM Solar
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Include safe reproduction steps and expected behavior.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Version or commit
+  - type: dropdown
+    attributes:
+      label: Area
+      options: [Web UI, API, Authorization, Database, Documentation, CI]
+  - type: checkboxes
+    attributes:
+      label: Safety check
+      options:
+        - label: This report contains no credentials, personal data, or private URLs.
+          required: true

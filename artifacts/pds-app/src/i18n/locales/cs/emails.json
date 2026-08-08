@@ -1,0 +1,10 @@
+{
+  "invitation": {
+    "subject": "Pozvánka do CRM Solar",
+    "body": "Byli jste pozváni do systému správy projektů."
+  },
+  "passwordReset": {
+    "subject": "Obnovení hesla CRM Solar",
+    "body": "Pro obnovení hesla klikněte na odkaz."
+  }
+}

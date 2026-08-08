@@ -1,0 +1,11 @@
+{
+  "name": "@workspace/api-spec",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "codegen": "rm -f ../api-zod/src/index.ts ../api-client-react/src/index.ts && orval --config ./orval.config.ts && sh ./fix-indices.sh && pnpm -w run typecheck:libs"
+  },
+  "devDependencies": {
+    "orval": "^8.22.0"
+  }
+}

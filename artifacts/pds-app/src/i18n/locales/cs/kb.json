@@ -1,0 +1,26 @@
+{
+  "title": "Znalostní báze",
+  "newArticle": "Nový článek",
+  "edit": "Upravit",
+  "preview": "Náhled",
+  "filterByTag": "Filtrovat podle tagu...",
+  "noMatch": "Žádné články odpovídající filtru.",
+  "noArticles": "Zatím žádné články. Klikněte + pro vytvoření.",
+  "selectArticle": "Vyberte článek ze seznamu nebo vytvořte nový.",
+  "noContent": "Žádný obsah. Klikněte Upravit pro přidání.",
+  "updated": "Aktualizováno",
+  "publish": "Zveřejnit",
+  "archive": "Archivovat",
+  "status": {
+    "draft": "Návrh",
+    "published": "Zveřejněno"
+  },
+  "fields": {
+    "title": "Nadpis",
+    "body": "Obsah",
+    "tags": "Štítky",
+    "summary": "Anotace",
+    "tagsPlaceholder": "Štítky oddělené čárkou",
+    "bodyPlaceholder": "Zadejte Markdown zde..."
+  }
+}

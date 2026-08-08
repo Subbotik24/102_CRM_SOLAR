@@ -1,0 +1,29 @@
+{
+  "title": "Soubory",
+  "upload": "Nahrát",
+  "download": "Stáhnout",
+  "versions": "Verze",
+  "noFiles": "Žádné soubory. Klikněte Nahrát pro přidání.",
+  "uploadFailed": "Nahrání souboru selhalo",
+  "allVersions": "Všechny verze",
+  "delete": "Smazat",
+  "confirmDelete": "Smazat tento soubor?",
+  "deleteFailed": "Nepodařilo se smazat soubor",
+  "deleteRequested": "Žádost o smazání byla odeslána administrátorovi",
+  "pendingDeletion": "Čeká na potvrzení smazání",
+  "approve": "Potvrdit",
+  "reject": "Zamítnout",
+  "status": {
+    "pending": "Čekající",
+    "stored": "Uloženo",
+    "failed": "Chyba",
+    "missing": "Chybí"
+  },
+  "fields": {
+    "name": "Název",
+    "version": "Verze",
+    "size": "Velikost",
+    "uploadedBy": "Nahráno",
+    "uploadedAt": "Datum"
+  }
+}

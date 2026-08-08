@@ -1,0 +1,19 @@
+{
+  "name": "@workspace/tests",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "pnpm run test:unit",
+    "test:unit": "tsx --test unit/*.test.ts",
+    "test:integration": "pnpm run test:integration:against-running",
+    "test:integration:against-running": "tsx --test --test-concurrency=1 integration/*.test.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@workspace/db": "workspace:*",
+    "tsx": "catalog:"
+  }
+}

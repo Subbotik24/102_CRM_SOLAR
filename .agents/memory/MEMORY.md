@@ -1,0 +1,5 @@
+- [Orval + Zod v3 compatibility](orval-zod-v3.md) — avoid `format: email` in OpenAPI spec; Orval emits `z.email()` (v4) which breaks if api-zod imports from `zod` v3 entry point
+- [argon2 native build approval](argon2-build.md) — argon2 must be in `onlyBuiltDependencies` in pnpm-workspace.yaml; without it bindings are silently skipped
+- [citext extension gating](citext-extension.md) — `CREATE EXTENSION IF NOT EXISTS citext` must run before `drizzle-kit push`; seed script handles it but needs superuser or rds_superuser
+- [express-rate-limit IPv6 keyGenerator](rate-limit-ipv6.md) — express-rate-limit v8 rejects custom keyGenerators that read IP directly; use default keyGenerator instead
+- [ENCRYPTION_KEY optional until Inc 4](encryption-key-scope.md) — ENCRYPTION_KEY is Dropbox-only (Increment 4); made optional in env.ts so startup works without it

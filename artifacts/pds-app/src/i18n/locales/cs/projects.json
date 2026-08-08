@@ -1,0 +1,95 @@
+{
+  "title": "Projekty",
+  "new": "Nový projekt",
+  "subtitle": "Aktivní zakázky a technický archiv.",
+  "notFound": "Projekt nenalezen.",
+  "noProjects": "Zatím žádné projekty. Vytvořte první.",
+  "noTasksYet": "Zatím žádné úkoly.",
+  "noStagesYet": "Zatím žádné etapy.",
+  "noMembersAdded": "Žádní členové nebyli přidáni.",
+  "taskPlaceholder": "Např. Nastavit CI pipeline",
+  "stagePlaceholder": "Např. Revize návrhu",
+  "parentProjectPlaceholder": "— kořenová úroveň —",
+  "projectNamePlaceholder": "Např. Zákaznický portál v2",
+  "descriptionPlaceholder": "Krátký popis…",
+  "completed": "Dokončeno",
+  "budget": "Rozpočet:",
+  "archiveProject": "Archivovat projekt",
+  "confirmArchive": "Potvrdit archivaci",
+  "archive": {
+    "title": "Archiv",
+    "subtitle": "Archivované projekty.",
+    "empty": "Archiv je prázdný.",
+    "restore": "Obnovit",
+    "archivedOn": "Archivováno"
+  },
+  "start": "Začátek:",
+  "due": "Termín:",
+  "showMore": "Zobrazit více",
+  "showLess": "Zobrazit méně",
+  "allStatuses": "Všechny stavy",
+  "addStage": "Přidat etapu",
+  "confirmDeleteStage": "Smazat tuto etapu?",
+  "noStage": "— bez etapy —",
+  "parentProject": "Nadřazený projekt",
+  "subprojects": "Podprojekty",
+  "includeSubprojectTasks": "Včetně podprojektů",
+  "subprojectTask": "Úkol z podprojektu",
+  "noDueDate": "Bez termínu",
+  "journal": "Deník",
+  "tabs": {
+    "tasks": "Úkoly",
+    "stages": "Etapy",
+    "members": "Členové",
+    "info": "Doplňující informace"
+  },
+  "info": {
+    "empty": "Zatím žádné doplňující informace.",
+    "addBlock": "Přidat blok",
+    "titlePlaceholder": "Např. Adresa objektu",
+    "bodyPlaceholder": "Podrobné informace…",
+    "confirmDelete": "Smazat tento blok?"
+  },
+  "view": {
+    "list": "Seznam",
+    "kanban": "Kanban",
+    "byStage": "Podle etap",
+    "timeline": "Časová osa"
+  },
+  "status": {
+    "planned": "Plánováno",
+    "active": "Aktivní",
+    "on_hold": "Pozastaveno",
+    "done": "Dokončeno",
+    "archived": "Archivováno"
+  },
+  "fields": {
+    "code": "Kód",
+    "name": "Název",
+    "client": "Klient",
+    "owner": "Zodpovědná osoba",
+    "startDate": "Začátek",
+    "dueDate": "Termín",
+    "totalHours": "Hod. (plán)",
+    "description": "Popis",
+    "summary": "Krátký popis",
+    "parentProject": "Nadřazený projekt (volitelné)"
+  },
+  "members": {
+    "title": "Členové",
+    "addMember": "Přidat člena",
+    "selectUser": "— vybrat uživatele —",
+    "add": "Přidat",
+    "remove": "Odebrat",
+    "confirmRemoveMember": "Odebrat tohoto člena z projektu?",
+    "roles": {
+      "owner": "Vlastník",
+      "manager": "Manažer",
+      "member": "Člen",
+      "viewer": "Pozorovatel",
+      "lead": "Vedoucí",
+      "contributor": "Člen",
+      "reader": "Pozorovatel"
+    }
+  }
+}

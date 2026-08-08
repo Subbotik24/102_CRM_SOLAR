@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "CRM Solar"
+version = "1.0.0"
+id = "artifacts/pds-app"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19497
+
+[services.development]
+run = "pnpm --filter @workspace/pds-app run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/pds-app", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/pds-app/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19497"
+BASE_PATH = "/"

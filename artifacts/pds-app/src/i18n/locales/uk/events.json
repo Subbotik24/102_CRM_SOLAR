@@ -1,0 +1,21 @@
+{
+  "project.created": "{{actorName}} створив(-ла) проєкт «{{projectName}}»",
+  "project.status_changed": "{{actorName}} змінив(-ла) статус проєкту на {{to}}",
+  "project.member_added": "{{actorName}} додав(-ла) {{memberName}} до проєкту",
+  "project.member_removed": "{{actorName}} видалив(-ла) {{memberName}} з проєкту",
+  "project.archived": "{{actorName}} заархівував(-ла) проєкт",
+  "subproject.created": "{{actorName}} створив(-ла) підпроєкт «{{projectName}}»",
+  "stage.created": "{{actorName}} створив(-ла) етап «{{stageName}}»",
+  "stage.completed": "{{actorName}} завершив(-ла) етап «{{stageName}}»",
+  "task.created": "{{actorName}} створив(-ла) завдання «{{taskTitle}}»",
+  "task.assigned": "{{actorName}} призначив(-ла) завдання «{{taskTitle}}» на {{assigneeName}}",
+  "task.status_changed": "{{actorName}} змінив(-ла) статус завдання «{{taskTitle}}» з {{from}} на {{to}}",
+  "task.due_changed": "{{actorName}} змінив(-ла) термін завдання «{{taskTitle}}»",
+  "task.completed": "{{actorName}} завершив(-ла) завдання «{{taskTitle}}»",
+  "comment.added": "{{actorName}} додав(-ла) коментар",
+  "file.uploaded": "{{actorName}} завантажив(-ла) файл «{{fileName}}»",
+  "file.version_added": "{{actorName}} завантажив(-ла) нову версію файлу «{{fileName}}»",
+  "kb.article_linked": "{{actorName}} прив'язав(-ла) статтю КЗ",
+  "log.decision_added": "{{actorName}} додав(-ла) рішення: {{title}}",
+  "log.milestone_added": "{{actorName}} додав(-ла) milestone: {{title}}"
+}
