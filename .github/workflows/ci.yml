@@ -98,11 +98,12 @@ jobs:
       DATABASE_URL: postgres://crm_solar:crm_solar_ci_only@127.0.0.1:5432/crm_solar_e2e
       SESSION_SECRET: ci-only-session-secret-with-at-least-32-characters
       APP_URL: http://127.0.0.1:5173
-      CORS_ORIGINS: http://127.0.0.1:5173
+      CORS_ORIGINS: http://127.0.0.1:5173,http://localhost:5173
       SEED_ADMIN_EMAIL: admin@crm-solar.test
       SEED_ADMIN_PASSWORD: CI-only-admin-password-123!
       EMAIL_PROVIDER: console
       NODE_ENV: test
+      PORT: 8080
       CI: true
     steps:
       - uses: actions/checkout@v4
@@ -114,7 +115,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm --filter @workspace/tests exec playwright install --with-deps chromium
       - run: pnpm run db:migrate
       - run: pnpm --filter @workspace/api-server run db:seed
       - run: pnpm run test:e2e

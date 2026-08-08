@@ -1,0 +1,6 @@
+[allowlist]
+description = "The Dropbox storage adapter identifier is not a credential."
+regexTarget = "match"
+regexes = [
+  '''dropboxAdapter''',
+]

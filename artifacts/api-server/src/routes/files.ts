@@ -30,7 +30,7 @@ import {
 } from "../services/files";
 import { createDeletionRequest } from "../services/deletionRequests";
 import { appStorage } from "../storage/appStorage";
-import { dropboxAdapter, DropboxApiError } from "../storage/dropboxAdapter";
+import { dropboxStorageAdapter, DropboxApiError } from "../storage/dropboxAdapter";
 import {
   buildAuthorizationUrl,
   exchangeCode,
@@ -154,7 +154,7 @@ router.get("/files/:id/download", requireAuth, async (req, res) => {
       await appStorage.stream(file.storageKey, res, file.originalFilename);
     } else {
       try {
-        await dropboxAdapter.stream(
+        await dropboxStorageAdapter.stream(
           file.dropboxPath ?? file.storageKey,
           res,
           file.originalFilename

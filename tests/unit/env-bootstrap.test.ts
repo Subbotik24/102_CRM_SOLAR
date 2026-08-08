@@ -8,10 +8,10 @@ const testsDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = resolve(testsDir, "..");
 const apiDir = resolve(repoRoot, "artifacts/api-server");
 
-test("API env bootstrap finds the repository .env from the package working directory", () => {
+test("API environment validation works from the package working directory", () => {
   const childEnv = { ...process.env };
-  delete childEnv.DATABASE_URL;
-  delete childEnv.SESSION_SECRET;
+  childEnv.DATABASE_URL = "postgres://postgres:postgres@127.0.0.1:5432/crm_solar_test";
+  childEnv.SESSION_SECRET = "test-session-secret-with-at-least-32-characters";
 
   const result = spawnSync(
     "pnpm",

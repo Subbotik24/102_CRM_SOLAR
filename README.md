@@ -228,9 +228,6 @@ handles that mapping instead and the proxy never fires.
   and `@esbuild/*` entries in `overrides`.
 - The brief explicitly forbids: time tracking, budgets, Gantt charts, SSO/OAuth
   login providers, multi-tenancy, offline/PWA, AI features and WebSockets.
-  The current code nevertheless contains an admin-only AI provider
-  configuration screen/API; this scope conflict needs a product decision before
-  either expanding or removing it.
 
 ---
 
