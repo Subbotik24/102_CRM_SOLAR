@@ -1,8 +1,9 @@
 # AGENTS.md
 
 Working instructions for Codex in this repository.
-Read [README.md](README.md) for setup and [PROJECT_STATUS.md](PROJECT_STATUS.md)
-for what is actually verified working.
+Read [README.md](README.md) for setup. For current evidence and release status use
+[docs/PROJECT_AUDIT_STATUS.md](docs/PROJECT_AUDIT_STATUS.md); `PROJECT_STATUS.md`
+is a historical snapshot and is not a release gate.
 
 ## What this is
 
@@ -49,34 +50,31 @@ Always use **pnpm** — a `preinstall` guard rejects npm and yarn.
 
 | Path | Contents |
 |---|---|
-| `lib/db/src/schema/` | Drizzle schema, one file per domain (18 tables) |
-| `lib/api-spec/openapi.yaml` | API contract — **currently incomplete, see below** |
+| `lib/db/src/schema/` | Drizzle schema, 27 modeled application tables |
+| `lib/api-spec/openapi.yaml` | API contract; method/path parity is checked separately from schema semantics |
 | `artifacts/api-server/src/routes/` | HTTP layer, thin |
 | `artifacts/api-server/src/services/` | Business logic + authorization |
 | `artifacts/api-server/src/storage/` | App Storage + Dropbox adapters |
 | `artifacts/pds-app/src/pages/` | One file per route |
 | `artifacts/pds-app/src/i18n/locales/{uk,cs}/` | 12 namespaces each |
 | `.agents/memory/` | Notes on past traps (citext, argon2, Orval/Zod, rate-limit IPv6) |
+| `docs/audit/` | Current structured findings and the reproducible audit ledger |
 
 ## Known state you must account for
 
-- **The OpenAPI spec has drifted.** 24 implemented endpoints are missing from
-  `lib/api-spec/openapi.yaml`, so the generated client covers only part of the
-  API. 7 frontend files use the generated hooks; 24 use raw `fetch`. When you
-  touch an endpoint that *is* in the spec, update the spec and rerun codegen.
-  When adding a new one, prefer extending the spec over adding another raw
-  `fetch` — but do not silently rewrite existing `fetch` call sites as a side
-  effect of an unrelated task.
-- **`handleError` in `routes/projects.ts` maps every `Error` to HTTP 400** and
-  returns `err.message` to the client. Domain services rely on this for
-  validation errors. Do not "fix" it piecemeal — it needs a typed error
-  hierarchy, tracked in NEXT_TASKS.md.
+- **OpenAPI method/path parity is currently 114/114, but semantic drift remains.**
+  The parity script does not validate request/response schemas, security schemes,
+  generated-client freshness, or runtime conformance. When changing an endpoint,
+  update the contract and generated clients and add semantic contract coverage.
+- **Anonymous reset currently bypasses the safe shared error mapping.**
+  `routes/auth.ts` returns arbitrary `err.message` from the reset workflow.
+  Preserve typed public errors and route unexpected failures through the shared
+  safe handler; see `docs/audit/FINDINGS_REGISTER.md` (`AUD-027`).
 - **Migrations use versioned SQL plus Drizzle's ledger.** Use `pnpm run
   db:migrate` for new databases and the guarded `db:migrate:adopt` workflow
   only after a verified legacy-database backup.
-- **Global search was removed** (commit `c451539`). `tests/integration/inc5-search.test.ts`
-  still exercises the deleted endpoints and will fail. The KB, chronicle and
-  log-entry tests in that same file are still valid.
+- **Global search was removed** (commit `c451539`). Treat old search-related prose
+  and tests as historical until their current behavior is independently verified.
 - **`PROJECT_STATUS.md` is a status snapshot, not a release gate.** Trust the
   repository commands above and the current implementation over historical
   prose when they disagree.
@@ -85,6 +83,7 @@ Always use **pnpm** — a `preinstall` guard rejects npm and yarn.
 
 Integration and e2e tests need PostgreSQL, a seeded database and a running
 server. If that infrastructure is unavailable, say so plainly rather than
-claiming the suites pass. `pnpm run typecheck`, `pnpm run build`, `pnpm run test`
-and `test:access` run with no infrastructure and should always be green before
-you report a task done.
+claiming the suites pass. On Windows, bootstrap needs Git's `sh` on `PATH`, the
+unit runner currently has a `pnpm`/`pnpm.cmd` portability failure, and the full
+frontend build needs the Windows Rollup optional binary. Do not convert a
+platform limitation into a PASS; record it as FAIL or BLOCKED with evidence.
